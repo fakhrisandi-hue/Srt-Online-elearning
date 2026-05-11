@@ -1,0 +1,407 @@
+### E-Learning API Tests Exhaustif
+# Ce fichier contient TOUS les endpoints de chaque contrôleur.
+# Vous pouvez l'exécuter dans VS Code avec l'extension "REST Client" ou IntelliJ.
+
+@baseUrl = http://localhost:8080/api
+
+### ==========================================
+### 🧑‍🎓 USER CONTROLLER (/api/users)
+### ==========================================
+
+### Créer un utilisateur
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "nom": "Dupont",
+  "prenom": "Jean",
+  "email": "jean.dupont@test.com",
+  "motDePasse": "password123",
+  "role": "APPRENANT"
+}
+
+### Récupérer tous les utilisateurs
+GET {{baseUrl}}/users
+Accept: application/json
+
+### Récupérer un utilisateur par ID
+GET {{baseUrl}}/users/1
+Accept: application/json
+
+### Récupérer un utilisateur par Email
+GET {{baseUrl}}/users/email/jean.dupont@test.com
+Accept: application/json
+
+### Mettre à jour un utilisateur
+PUT {{baseUrl}}/users/1
+Content-Type: application/json
+
+{
+  "nom": "Dupont",
+  "prenom": "Jean-Marc",
+  "email": "jean.dupont@test.com"
+}
+
+### Supprimer un utilisateur
+DELETE {{baseUrl}}/users/1
+
+### Récupérer les rôles possibles
+GET {{baseUrl}}/users/roles
+Accept: application/json
+
+
+### ==========================================
+### 📚 COURS CONTROLLER (/api/cours)
+### ==========================================
+
+### Créer un nouveau cours
+POST {{baseUrl}}/cours?formateurId=1
+Content-Type: application/json
+
+{
+  "titre": "Introduction à Spring Boot",
+  "description": "Apprenez les bases",
+  "niveau": "DEBUTANT",
+  "categorie": "Informatique"
+}
+
+### Récupérer un cours par ID
+GET {{baseUrl}}/cours/1
+Accept: application/json
+
+### Mettre à jour un cours
+PUT {{baseUrl}}/cours/1
+Content-Type: application/json
+
+{
+  "titre": "Spring Boot Avancé",
+  "description": "Apprenez les concepts avancés"
+}
+
+### Désactiver un cours
+DELETE {{baseUrl}}/cours/1
+
+### Activer un cours
+PUT {{baseUrl}}/cours/1/activer
+
+### Catalogue Public (Pagination)
+GET {{baseUrl}}/cours/public/catalogue?page=0&size=10
+Accept: application/json
+
+### Recherche avec Filtres (Titre, Catégorie, Niveau)
+GET {{baseUrl}}/cours/public/search?titre=Spring&categorie=Informatique&niveau=DEBUTANT
+Accept: application/json
+
+### Recherche par Titre
+GET {{baseUrl}}/cours/public/search/titre?titre=Spring
+Accept: application/json
+
+### Filtrer par Catégorie
+GET {{baseUrl}}/cours/public/filter/categorie?categorie=Informatique
+Accept: application/json
+
+### Filtrer par Niveau
+GET {{baseUrl}}/cours/public/filter/niveau?niveau=DEBUTANT
+Accept: application/json
+
+### Récupérer les cours d'un formateur
+GET {{baseUrl}}/cours/formateur/1
+Accept: application/json
+
+### Uploader une image de cours (Exemple Multipart)
+POST {{baseUrl}}/cours/upload-image
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< ./chemin/vers/image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Mettre à jour une image de cours
+PUT {{baseUrl}}/cours/1/update-image
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="new_image.jpg"
+Content-Type: image/jpeg
+
+< ./chemin/vers/new_image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Récupérer les niveaux disponibles
+GET {{baseUrl}}/cours/niveaux
+Accept: application/json
+
+
+### ==========================================
+### 🧩 MODULE CONTROLLER (/api/modules)
+### ==========================================
+
+### Créer un module
+POST {{baseUrl}}/modules?coursId=1
+Content-Type: application/json
+
+{
+  "titre": "Chapitre 1 : Les bases",
+  "ordre": 1
+}
+
+### Récupérer un module par ID
+GET {{baseUrl}}/modules/1
+Accept: application/json
+
+### Récupérer les modules d'un cours
+GET {{baseUrl}}/modules/cours/1
+Accept: application/json
+
+### Mettre à jour un module
+PUT {{baseUrl}}/modules/1
+Content-Type: application/json
+
+{
+  "titre": "Chapitre 1 : Introduction",
+  "ordre": 1
+}
+
+### Supprimer un module
+DELETE {{baseUrl}}/modules/1
+
+
+### ==========================================
+### 📖 LECON CONTROLLER (/api/lecons)
+### ==========================================
+
+### Créer une leçon
+POST {{baseUrl}}/lecons?moduleId=1
+Content-Type: application/json
+
+{
+  "titre": "Installation de l'environnement",
+  "contenu": "Lien vers la vidéo ou texte",
+  "ordre": 1
+}
+
+### Récupérer une leçon par ID
+GET {{baseUrl}}/lecons/1
+Accept: application/json
+
+### Récupérer les leçons d'un module
+GET {{baseUrl}}/lecons/module/1
+Accept: application/json
+
+### Mettre à jour une leçon
+PUT {{baseUrl}}/lecons/1
+Content-Type: application/json
+
+{
+  "titre": "Installation de Java",
+  "contenu": "Nouveau contenu"
+}
+
+### Supprimer une leçon
+DELETE {{baseUrl}}/lecons/1
+
+
+### ==========================================
+### 📝 QUIZ CONTROLLER (/api/quizzes)
+### ==========================================
+
+### Créer un Quiz
+POST {{baseUrl}}/quizzes?moduleId=1
+Content-Type: application/json
+
+{
+  "titre": "Quiz Chapitre 1",
+  "description": "Validation des acquis",
+  "scoreMinimum": 70
+}
+
+### Récupérer un Quiz par ID
+GET {{baseUrl}}/quizzes/1
+Accept: application/json
+
+### Récupérer les Quiz d'un module
+GET {{baseUrl}}/quizzes/module/1
+Accept: application/json
+
+### Mettre à jour un Quiz
+PUT {{baseUrl}}/quizzes/1
+Content-Type: application/json
+
+{
+  "titre": "Quiz Chapitre 1 Modifié"
+}
+
+### Supprimer un Quiz
+DELETE {{baseUrl}}/quizzes/1
+
+### Ajouter une Question au Quiz
+POST {{baseUrl}}/quizzes/1/questions
+Content-Type: application/json
+
+{
+  "texteQuestion": "Que signifie API ?",
+  "points": 10
+}
+
+### Récupérer les questions d'un Quiz
+GET {{baseUrl}}/quizzes/1/questions
+Accept: application/json
+
+### Mettre à jour une Question
+PUT {{baseUrl}}/quizzes/questions/1
+Content-Type: application/json
+
+{
+  "texteQuestion": "Que signifie REST API ?"
+}
+
+### Supprimer une Question
+DELETE {{baseUrl}}/quizzes/questions/1
+
+### Ajouter un Choix à une Question
+POST {{baseUrl}}/quizzes/questions/1/choix
+Content-Type: application/json
+
+{
+  "texte": "Application Programming Interface",
+  "estCorrect": true
+}
+
+### Récupérer les Choix d'une Question
+GET {{baseUrl}}/quizzes/questions/1/choix
+Accept: application/json
+
+### Mettre à jour un Choix
+PUT {{baseUrl}}/quizzes/choix/1
+Content-Type: application/json
+
+{
+  "texte": "Autre choix"
+}
+
+### Supprimer un Choix
+DELETE {{baseUrl}}/quizzes/choix/1
+
+### Récupérer le nombre total de questions d'un quiz
+GET {{baseUrl}}/quizzes/1/total-questions
+Accept: application/json
+
+### Récupérer la bonne réponse d'une question
+GET {{baseUrl}}/quizzes/questions/1/bonne-reponse
+Accept: application/json
+
+### Vérifier une réponse
+POST {{baseUrl}}/quizzes/verifier-reponse
+Content-Type: application/json
+
+{
+  "apprenantId": 1,
+  "quizId": 1,
+  "questionId": 1,
+  "choixIds": [1]
+}
+
+
+### ==========================================
+### 📊 REPONSE APPRENANT CONTROLLER (/api/reponses)
+### ==========================================
+
+### Soumettre une réponse
+POST {{baseUrl}}/reponses/soumettre
+Content-Type: application/json
+
+{
+  "apprenantId": 1,
+  "quizId": 1,
+  "questionId": 1,
+  "choixIds": [1]
+}
+
+### Récupérer les réponses d'un apprenant pour un quiz
+GET {{baseUrl}}/reponses/quiz/1/1
+Accept: application/json
+
+### Récupérer toutes les réponses d'un apprenant
+GET {{baseUrl}}/reponses/apprenant/1
+Accept: application/json
+
+### Obtenir le score d'un apprenant à un quiz
+GET {{baseUrl}}/reponses/score/1/1
+Accept: application/json
+
+### Vérifier si un apprenant a réussi un quiz
+GET {{baseUrl}}/reponses/reussi/1/1
+Accept: application/json
+
+### Obtenir le résultat complet du quiz
+GET {{baseUrl}}/reponses/resultat-quiz/1/1
+Accept: application/json
+
+
+### ==========================================
+### 📈 PROGRESSION CONTROLLER (/api/progression)
+### ==========================================
+
+### Marquer une leçon comme complétée
+POST {{baseUrl}}/progression/marquer-completee
+Content-Type: application/json
+
+{
+  "apprenantId": 1,
+  "leconId": 1
+}
+
+### Marquer une leçon comme non complétée
+POST {{baseUrl}}/progression/marquer-non-completee
+Content-Type: application/json
+
+{
+  "apprenantId": 1,
+  "leconId": 1
+}
+
+### Voir la progression pour une leçon
+GET {{baseUrl}}/progression/1/1
+Accept: application/json
+
+### Voir la progression d'un cours
+GET {{baseUrl}}/progression/cours/1/1
+Accept: application/json
+
+### Voir la progression d'un module
+GET {{baseUrl}}/progression/module/1/1
+Accept: application/json
+
+### Voir toute la progression d'un apprenant
+GET {{baseUrl}}/progression/apprenant/1
+Accept: application/json
+
+
+### ==========================================
+### ✍️ INSCRIPTION CONTROLLER (/api/inscriptions)
+### ==========================================
+
+### Inscrire un apprenant
+POST {{baseUrl}}/inscriptions
+Content-Type: application/json
+
+{
+  "apprenantId": 1,
+  "coursId": 1
+}
+
+### Récupérer les inscriptions d'un apprenant
+GET {{baseUrl}}/inscriptions/apprenant/1
+Accept: application/json
+
+
+### ==========================================
+### 🖼️ IMAGE CONTROLLER (/api/images)
+### ==========================================
+
+### Récupérer une image
+GET http://localhost:8080/images/image.jpg
+Accept: image/jpeg
