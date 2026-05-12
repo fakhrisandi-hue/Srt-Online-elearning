@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<aside class="sidebar" th:fragment="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">E</div>
+        <span class="sidebar-title">E-Learning</span>
+    </div>
+    <nav class="sidebar-nav">
+        <div sec:authorize="hasAuthority('ADMIN')">
+            <div class="nav-section">
+                <div class="nav-section-title">Administration</div>
+                <a th:href="@{/admin/dashboard}" class="nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}"><span class="icon"><i class="fas fa-chart-pie"></i></span> Tableau de bord</a>
+                <a th:href="@{/admin/users}" class="nav-link" th:classappend="${activeMenu == 'users' ? 'active' : ''}"><span class="icon"><i class="fas fa-users"></i></span> Utilisateurs</a>
+                <a th:href="@{/admin/cours}" class="nav-link" th:classappend="${activeMenu == 'cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-book"></i></span> Cours</a>
+            </div>
+        </div>
+        <div sec:authorize="hasAuthority('FORMATEUR')">
+            <div class="nav-section">
+                <div class="nav-section-title">Espace Formateur</div>
+                <a th:href="@{/formateur/dashboard}" class="nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}"><span class="icon"><i class="fas fa-chart-pie"></i></span> Tableau de bord</a>
+                <a th:href="@{/formateur/cours}" class="nav-link" th:classappend="${activeMenu == 'cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-book"></i></span> Mes Cours</a>
+                <a th:href="@{/formateur/cours/new}" class="nav-link" th:classappend="${activeMenu == 'new-cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-plus-circle"></i></span> Nouveau Cours</a>
+            </div>
+        </div>
+        <div sec:authorize="hasAuthority('APPRENANT')">
+            <div class="nav-section">
+                <div class="nav-section-title">Espace Apprenant</div>
+                <a th:href="@{/apprenant/dashboard}" class="nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}"><span class="icon"><i class="fas fa-chart-pie"></i></span> Tableau de bord</a>
+                <a th:href="@{/apprenant/catalogue}" class="nav-link" th:classappend="${activeMenu == 'catalogue' ? 'active' : ''}"><span class="icon"><i class="fas fa-th-large"></i></span> Catalogue</a>
+                <a th:href="@{/apprenant/mes-cours}" class="nav-link" th:classappend="${activeMenu == 'mes-cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Mes Cours</a>
+                <a th:href="@{/apprenant/resultats}" class="nav-link" th:classappend="${activeMenu == 'resultats' ? 'active' : ''}"><span class="icon"><i class="fas fa-trophy"></i></span> Résultats</a>
+            </div>
+        </div>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <div class="user-avatar">U</div>
+            <div>
+                <div class="user-name" sec:authentication="name">Utilisateur</div>
+            </div>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </form>
+    </div>
+</aside>
+</body>
+</html>

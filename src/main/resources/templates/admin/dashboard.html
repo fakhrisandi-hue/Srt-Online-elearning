@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="content-header"><h1>Tableau de bord Admin</h1><p>Vue d'ensemble de la plateforme</p></div>
+        <div class="content-body fade-in" th:with="activeMenu='dashboard'">
+            <div th:if="${message}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${message}"></span></div>
+            <div th:if="${error}" class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span></div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-users"></i></div><div class="stat-value" th:text="${totalUsers}">0</div><div class="stat-label">Total Utilisateurs</div></div>
+                <div class="stat-card"><div class="stat-icon green"><i class="fas fa-user-graduate"></i></div><div class="stat-value" th:text="${totalApprenants}">0</div><div class="stat-label">Apprenants</div></div>
+                <div class="stat-card"><div class="stat-icon cyan"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-value" th:text="${totalFormateurs}">0</div><div class="stat-label">Formateurs</div></div>
+                <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-book"></i></div><div class="stat-value" th:text="${totalCours}">0</div><div class="stat-label">Cours</div></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-clock"></i> Derniers utilisateurs</h3><a th:href="@{/admin/users}" class="btn btn-sm btn-outline">Voir tout</a></div>
+                    <div class="card-body">
+                        <div class="table-container"><table>
+                            <thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th></tr></thead>
+                            <tbody>
+                            <tr th:each="user : ${recentUsers}">
+                                <td th:text="${user.name}">Nom</td>
+                                <td th:text="${user.email}">email</td>
+                                <td><span class="badge badge-primary" th:text="${user.role}">ROLE</span></td>
+                                <td><span th:class="${user.actif ? 'badge badge-success' : 'badge badge-danger'}" th:text="${user.actif ? 'Actif' : 'Inactif'}">Statut</span></td>
+                            </tr>
+                            </tbody>
+                        </table></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-book-open"></i> Derniers cours</h3><a th:href="@{/admin/cours}" class="btn btn-sm btn-outline">Voir tout</a></div>
+                    <div class="card-body">
+                        <div class="table-container"><table>
+                            <thead><tr><th>Titre</th><th>Formateur</th><th>Niveau</th></tr></thead>
+                            <tbody>
+                            <tr th:each="cours : ${recentCours}">
+                                <td th:text="${cours.titre}">Titre</td>
+                                <td th:text="${cours.formateur.name}">Formateur</td>
+                                <td><span class="badge badge-cyan" th:text="${cours.niveau}">Niveau</span></td>
+                            </tr>
+                            </tbody>
+                        </table></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

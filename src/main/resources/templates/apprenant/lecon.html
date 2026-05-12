@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${lecon.titre} + ' | E-Learning'">Leçon</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="content-header">
+            <h1 th:text="${lecon.titre}">Leçon</h1>
+            <p><a th:href="@{/apprenant/cours/{id}(id=${cours.id})}" style="color:var(--text-muted);"><i class="fas fa-arrow-left"></i> Retour au cours : <span th:text="${cours.titre}">Cours</span></a></p>
+        </div>
+        <div class="content-body fade-in">
+            <div th:if="${message}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${message}"></span></div>
+
+            <div style="display:grid; grid-template-columns:1fr 280px; gap:24px;">
+                <!-- Lesson Content -->
+                <div>
+                    <div class="card">
+                        <div class="card-body" style="padding:32px;">
+                            <div style="display:flex; gap:12px; margin-bottom:24px;">
+                                <span class="badge badge-primary"><i class="fas fa-clock"></i> <span th:text="${lecon.dureeMin} + ' min'">10</span></span>
+                                <span class="badge" th:classappend="${completee ? 'badge-success' : 'badge-warning'}" th:text="${completee ? '✓ Terminée' : 'En cours'}">Statut</span>
+                            </div>
+                            <div th:utext="${lecon.contenu}" style="line-height:1.8; font-size:15px; color:var(--text-secondary);">Contenu</div>
+                        </div>
+                    </div>
+                    <!-- Mark Complete -->
+                    <div style="margin-top:24px; display:flex; gap:12px;" th:unless="${completee}">
+                        <form th:action="@{/apprenant/lecon/{id}/complete(id=${lecon.id})}" method="post">
+                            <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-check"></i> Marquer comme terminée</button>
+                        </form>
+                    </div>
+                    <div th:if="${completee}" style="margin-top:24px;" class="alert alert-success"><i class="fas fa-check-circle"></i> Vous avez terminé cette leçon !</div>
+                </div>
+
+                <!-- Sidebar Navigation -->
+                <div>
+                    <div class="card" style="position:sticky; top:100px;">
+                        <div class="card-header"><h3><i class="fas fa-list"></i> Leçons du module</h3></div>
+                        <div class="card-body" style="padding:12px;">
+                            <div th:each="sibling : ${siblingLecons}" class="lecon-item" th:style="${sibling.id == lecon.id ? 'background:rgba(99,102,241,0.1);' : ''}">
+                                <i class="fas fa-play-circle" style="color:var(--primary-light);"></i>
+                                <a th:href="@{/apprenant/lecon/{id}(id=${sibling.id})}" th:text="${sibling.titre}" style="flex:1; font-size:13px;">Leçon</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

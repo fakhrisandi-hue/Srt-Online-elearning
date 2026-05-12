@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription | E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-card fade-in">
+        <div class="auth-logo">
+            <div class="logo-icon">E</div>
+            <h2>Créer un compte</h2>
+            <p>Rejoignez notre plateforme</p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}">Erreur</span>
+        </div>
+
+        <form th:action="@{/register}" method="post">
+            <div class="form-group">
+                <label class="form-label" for="name">Nom complet</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Votre nom" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Adresse email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="votre@email.com" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="role">Rôle</label>
+                <select id="role" name="role" class="form-control" required>
+                    <option value="APPRENANT">Apprenant</option>
+                    <option value="FORMATEUR">Formateur</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="4">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required minlength="4">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%; justify-content:center; margin-top:8px;">
+                <i class="fas fa-user-plus"></i> S'inscrire
+            </button>
+        </form>
+
+        <p style="text-align:center; margin-top:24px; font-size:14px; color:var(--text-secondary);">
+            Déjà inscrit ?
+            <a th:href="@{/login}" style="font-weight:600;">Se connecter</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

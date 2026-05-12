@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès Refusé | E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-card" style="text-align:center;">
+        <div style="font-size:72px; color:var(--danger); margin-bottom:16px;"><i class="fas fa-shield-alt"></i></div>
+        <h2 style="margin-bottom:8px;">Accès Refusé</h2>
+        <p style="color:var(--text-secondary); margin-bottom:24px;">Vous n'avez pas la permission d'accéder à cette page.</p>
+        <a th:href="@{/}" class="btn btn-primary"><i class="fas fa-home"></i> Retour à l'accueil</a>
+    </div>
+</div>
+</body>
+</html>

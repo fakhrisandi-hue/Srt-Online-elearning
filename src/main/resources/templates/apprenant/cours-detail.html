@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${cours.titre} + ' | E-Learning'">Cours</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="content-header"><h1 th:text="${cours.titre}">Cours</h1><p><a th:href="@{/apprenant/catalogue}" style="color:var(--text-muted);"><i class="fas fa-arrow-left"></i> Retour au catalogue</a></p></div>
+        <div class="content-body fade-in">
+            <div th:if="${message}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${message}"></span></div>
+            <div th:if="${error}" class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span></div>
+
+            <div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
+                <!-- Course Info -->
+                <div>
+                    <div class="card" style="margin-bottom:24px;">
+                        <div th:if="${cours.imageUrl}" class="course-card-img" style="height:240px;"><img th:src="${cours.imageUrl}" alt="Cours" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <div class="card-body">
+                            <p th:text="${cours.description}" style="line-height:1.7; color:var(--text-secondary);">Description</p>
+                            <div style="display:flex; gap:16px; margin-top:16px; flex-wrap:wrap;">
+                                <span class="badge badge-cyan" th:text="${cours.niveau}">Niveau</span>
+                                <span class="badge badge-primary" th:text="${cours.categorie}">Cat</span>
+                                <span style="font-size:13px; color:var(--text-muted);"><i class="fas fa-user"></i> <span th:text="${cours.formateur.name}">Formateur</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modules -->
+                    <h3 style="margin-bottom:16px;"><i class="fas fa-cubes"></i> Contenu du cours</h3>
+                    <div th:each="data : ${modulesData}" class="module-item">
+                        <div class="module-header">
+                            <div><strong th:text="'Module ' + ${data.module.ordre} + ' : ' + ${data.module.titre}">Module</strong></div>
+                            <span class="badge badge-primary" th:text="${#lists.size(data.lecons)} + ' leçons'">0</span>
+                        </div>
+                        <div class="module-content" th:if="${estInscrit}">
+                            <div th:each="lecon : ${data.lecons}" class="lecon-item">
+                                <i class="fas fa-play-circle" style="color:var(--primary-light);"></i>
+                                <a th:href="@{/apprenant/lecon/{id}(id=${lecon.id})}" th:text="${lecon.titre}" style="flex:1;">Leçon</a>
+                                <span class="badge badge-primary" th:text="${lecon.dureeMin} + ' min'">10</span>
+                            </div>
+                            <div th:each="quiz : ${data.quizzes}" class="quiz-item">
+                                <i class="fas fa-question-circle" style="color:var(--accent);"></i>
+                                <a th:href="@{/apprenant/quiz/{id}(id=${quiz.id})}" th:text="${quiz.titre}" style="flex:1;">Quiz</a>
+                                <span class="badge badge-cyan" th:text="${quiz.dureeMin} + ' min'">15</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(modulesData)}" class="empty-state" style="padding:32px;"><h3>Contenu en préparation</h3></div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <div class="card" style="position:sticky; top:100px;">
+                        <div class="card-body" style="text-align:center;">
+                            <div th:if="${estInscrit}">
+                                <div style="margin-bottom:16px;">
+                                    <div style="font-size:48px; font-weight:800; color:var(--primary-light);" th:text="${#numbers.formatDecimal(progression, 0, 0)} + '%'">0%</div>
+                                    <div style="font-size:13px; color:var(--text-muted);">Progression</div>
+                                </div>
+                                <div class="progress-bar-container" style="height:12px; margin-bottom:16px;"><div class="progress-bar-fill" th:style="'width:' + ${progression} + '%'"></div></div>
+                                <span class="badge badge-success">Inscrit</span>
+                            </div>
+                            <div th:unless="${estInscrit}">
+                                <div style="font-size:48px; margin-bottom:16px;"><i class="fas fa-graduation-cap" style="color:var(--primary-light);"></i></div>
+                                <p style="color:var(--text-secondary); margin-bottom:20px;">Inscrivez-vous pour accéder au contenu</p>
+                                <form th:action="@{/apprenant/cours/{id}/inscrire(id=${cours.id})}" method="post">
+                                    <button type="submit" class="btn btn-primary btn-lg" style="width:100%; justify-content:center;"><i class="fas fa-user-plus"></i> S'inscrire</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

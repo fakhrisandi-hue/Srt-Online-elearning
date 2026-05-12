@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue | E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="content-header"><h1>Catalogue des Cours</h1><p>Découvrez et inscrivez-vous aux cours</p></div>
+        <div class="content-body fade-in">
+            <!-- Search & Filters -->
+            <div class="card" style="margin-bottom:24px;">
+                <div class="card-body" style="padding:16px 24px;">
+                    <form th:action="@{/apprenant/catalogue}" method="get" style="display:flex; gap:12px; align-items:end; flex-wrap:wrap;">
+                        <div class="form-group" style="flex:2; margin-bottom:0;"><input type="text" name="search" class="form-control" placeholder="Rechercher un cours..." th:value="${search}"></div>
+                        <div class="form-group" style="flex:1; margin-bottom:0;">
+                            <select name="niveau" class="form-control"><option value="">Tous les niveaux</option><option th:each="n : ${niveaux}" th:value="${n}" th:text="${n}" th:selected="${niveau == n.name()}">Niveau</option></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="height:42px;"><i class="fas fa-search"></i> Rechercher</button>
+                        <a th:href="@{/apprenant/catalogue}" class="btn btn-outline" style="height:42px;">Réinitialiser</a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="courses-grid">
+                <div class="card course-card" th:each="cours : ${coursList}">
+                    <div class="course-card-img">
+                        <img th:if="${cours.imageUrl}" th:src="${cours.imageUrl}" alt="Cours">
+                        <i th:unless="${cours.imageUrl}" class="fas fa-book"></i>
+                    </div>
+                    <div class="course-card-body">
+                        <div class="course-card-title" th:text="${cours.titre}">Titre</div>
+                        <div class="course-card-desc" th:text="${cours.description}">Description</div>
+                        <div class="course-card-meta">
+                            <span class="badge badge-cyan" th:text="${cours.niveau}">Niveau</span>
+                            <span><i class="fas fa-tag"></i> <span th:text="${cours.categorie}">Cat</span></span>
+                            <span><i class="fas fa-user"></i> <span th:text="${cours.formateur.name}">Formateur</span></span>
+                        </div>
+                        <a th:href="@{/apprenant/cours/{id}(id=${cours.id})}" class="btn btn-primary btn-sm" style="width:100%; justify-content:center; margin-top:16px;">Voir le cours</a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(coursList)}" class="empty-state"><div class="icon"><i class="fas fa-search"></i></div><h3>Aucun cours trouvé</h3></div>
+
+            <!-- Pagination -->
+            <div th:if="${totalPages > 1}" style="display:flex; justify-content:center; gap:8px; margin-top:32px;">
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:href="@{/apprenant/catalogue(page=${i}, search=${search}, niveau=${niveau})}"
+                   class="btn btn-sm" th:classappend="${currentPage == i ? 'btn-primary' : 'btn-outline'}" th:text="${i + 1}">1</a>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

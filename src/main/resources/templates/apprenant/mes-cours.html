@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Cours | E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="content-header"><h1>Mes Cours</h1><p>Vos cours en cours et terminés</p></div>
+        <div class="content-body fade-in">
+            <div th:if="${#lists.isEmpty(coursData)}" class="empty-state"><div class="icon"><i class="fas fa-book"></i></div><h3>Aucun cours</h3><p>Explorez le catalogue</p><a th:href="@{/apprenant/catalogue}" class="btn btn-primary" style="margin-top:16px;">Voir le catalogue</a></div>
+            <div class="courses-grid" th:unless="${#lists.isEmpty(coursData)}">
+                <div class="card course-card" th:each="data : ${coursData}">
+                    <div class="course-card-img">
+                        <img th:if="${data.cours.imageUrl}" th:src="${data.cours.imageUrl}" alt="Cours">
+                        <i th:unless="${data.cours.imageUrl}" class="fas fa-book"></i>
+                    </div>
+                    <div class="course-card-body">
+                        <div style="display:flex; justify-content:space-between; align-items:start;">
+                            <div class="course-card-title" th:text="${data.cours.titre}">Titre</div>
+                            <span class="badge" th:classappend="${data.inscription.statut.name() == 'EN_COURS' ? 'badge-warning' : (data.inscription.statut.name() == 'TERMINE' ? 'badge-success' : 'badge-danger')}" th:text="${data.inscription.statut}">Statut</span>
+                        </div>
+                        <div style="margin:12px 0;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px;"><span>Progression</span><span th:text="${#numbers.formatDecimal(data.progression, 0, 0)} + '%'">0%</span></div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" th:style="'width:' + ${data.progression} + '%'"></div></div>
+                        </div>
+                        <a th:href="@{/apprenant/cours/{id}(id=${data.cours.id})}" class="btn btn-sm btn-primary" style="width:100%; justify-content:center;">Continuer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

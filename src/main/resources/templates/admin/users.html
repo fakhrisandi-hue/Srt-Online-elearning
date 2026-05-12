@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisateurs | E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="content-header"><h1>Gestion des Utilisateurs</h1><p>Gérer les comptes de la plateforme</p></div>
+        <div class="content-body fade-in">
+            <div th:if="${message}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${message}"></span></div>
+            <div th:if="${error}" class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> Liste des utilisateurs</h3>
+                    <div style="display:flex; gap:8px;">
+                        <a th:href="@{/admin/users}" class="btn btn-sm" th:classappend="${selectedRole == null ? 'btn-primary' : 'btn-outline'}">Tous</a>
+                        <a th:each="r : ${roles}" th:href="@{/admin/users(role=${r})}" class="btn btn-sm" th:classappend="${selectedRole == r.name() ? 'btn-primary' : 'btn-outline'}" th:text="${r}">ROLE</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-container"><table>
+                        <thead><tr><th>ID</th><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Date création</th><th>Actions</th></tr></thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}">#</td>
+                            <td th:text="${user.name}">Nom</td>
+                            <td th:text="${user.email}">email</td>
+                            <td><span class="badge badge-primary" th:text="${user.role}">ROLE</span></td>
+                            <td><span th:class="${user.actif ? 'badge badge-success' : 'badge badge-danger'}" th:text="${user.actif ? 'Actif' : 'Inactif'}">Statut</span></td>
+                            <td th:text="${#temporals.format(user.dateCreation, 'dd/MM/yyyy HH:mm')}">Date</td>
+                            <td style="display:flex; gap:6px;">
+                                <form th:action="@{/admin/users/{id}/toggle(id=${user.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm" th:classappend="${user.actif ? 'btn-outline' : 'btn-success'}" th:text="${user.actif ? 'Désactiver' : 'Activer'}">Toggle</button>
+                                </form>
+                                <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" style="display:inline;" onsubmit="return confirmDelete('Supprimer cet utilisateur ?')">
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table></div>
+                    <div th:if="${#lists.isEmpty(users)}" class="empty-state"><div class="icon"><i class="fas fa-users"></i></div><h3>Aucun utilisateur trouvé</h3></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

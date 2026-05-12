@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle != null ? pageTitle + ' | E-Learning' : 'E-Learning'}">E-Learning</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">E</div>
+            <span class="sidebar-title">E-Learning</span>
+        </div>
+        <nav class="sidebar-nav">
+            <!-- Admin Nav -->
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <div class="nav-section">
+                    <div class="nav-section-title">Administration</div>
+                    <a th:href="@{/admin/dashboard}" class="nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}"><span class="icon"><i class="fas fa-chart-pie"></i></span> Tableau de bord</a>
+                    <a th:href="@{/admin/users}" class="nav-link" th:classappend="${activeMenu == 'users' ? 'active' : ''}"><span class="icon"><i class="fas fa-users"></i></span> Utilisateurs</a>
+                    <a th:href="@{/admin/cours}" class="nav-link" th:classappend="${activeMenu == 'cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-book"></i></span> Cours</a>
+                </div>
+            </div>
+            <!-- Formateur Nav -->
+            <div sec:authorize="hasAuthority('FORMATEUR')">
+                <div class="nav-section">
+                    <div class="nav-section-title">Espace Formateur</div>
+                    <a th:href="@{/formateur/dashboard}" class="nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}"><span class="icon"><i class="fas fa-chart-pie"></i></span> Tableau de bord</a>
+                    <a th:href="@{/formateur/cours}" class="nav-link" th:classappend="${activeMenu == 'cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-book"></i></span> Mes Cours</a>
+                    <a th:href="@{/formateur/cours/new}" class="nav-link" th:classappend="${activeMenu == 'new-cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-plus-circle"></i></span> Nouveau Cours</a>
+                </div>
+            </div>
+            <!-- Apprenant Nav -->
+            <div sec:authorize="hasAuthority('APPRENANT')">
+                <div class="nav-section">
+                    <div class="nav-section-title">Espace Apprenant</div>
+                    <a th:href="@{/apprenant/dashboard}" class="nav-link" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}"><span class="icon"><i class="fas fa-chart-pie"></i></span> Tableau de bord</a>
+                    <a th:href="@{/apprenant/catalogue}" class="nav-link" th:classappend="${activeMenu == 'catalogue' ? 'active' : ''}"><span class="icon"><i class="fas fa-th-large"></i></span> Catalogue</a>
+                    <a th:href="@{/apprenant/mes-cours}" class="nav-link" th:classappend="${activeMenu == 'mes-cours' ? 'active' : ''}"><span class="icon"><i class="fas fa-graduation-cap"></i></span> Mes Cours</a>
+                    <a th:href="@{/apprenant/resultats}" class="nav-link" th:classappend="${activeMenu == 'resultats' ? 'active' : ''}"><span class="icon"><i class="fas fa-trophy"></i></span> Résultats</a>
+                </div>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" sec:authentication="name" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">U</div>
+                <div>
+                    <div class="user-name" sec:authentication="name">Utilisateur</div>
+                    <div class="user-role" sec:authentication="principal.authorities">Rôle</div>
+                </div>
+            </div>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-header" th:if="${pageTitle}">
+            <h1 th:text="${pageTitle}">Page</h1>
+            <p th:if="${pageSubtitle}" th:text="${pageSubtitle}"></p>
+        </div>
+        <div class="content-body fade-in">
+            <!-- Flash Messages -->
+            <div th:if="${message}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${message}"></span></div>
+            <div th:if="${error}" class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span></div>
+            <!-- Page Content -->
+            <div th:replace="~{${contentTemplate} :: content}">Content goes here</div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
